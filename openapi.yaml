@@ -38,6 +38,21 @@ paths:
             enum:
               - kennel
               - notkennel
+          - in: query
+          name: dog_kennel_id
+          description: Идентификатор питомника для фильтрации питомцев
+          schema:
+            type: integer
+        - in: query
+          name: sortBy
+          description: Сортировка результатов по имени (asc - по возрастанию, desc - по убыванию)
+          schema:
+            type: string
+        - in: query
+          name: limit
+          description: Ограничить количество результатов
+          schema:
+            type: integer
       responses:
         '200':
           description: "Успешный ответ"
