@@ -1,0 +1,103 @@
+openapi: 3.0.0
+info:
+  title: Ветеринарная клиника API
+  version: 1.0.0
+servers:
+  - url: http://api.example.com/v1
+paths:
+  /owners/{owner_id}:
+    get:
+      summary: Получить список всех питомцев
+      description: Returns information about the owner with the specified owner_id and a list of their pets.
+      parameters:
+        - name: owner_id
+          in: path
+          description: ID of the owner
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        '404':
+          description: Owner not found
+
+  /pets:
+    get:
+      summary: "Получить список всех питомцев"
+      parameters:
+        - in: query
+          name: kennel
+          description: "Фильтрация питомцев по наличию или отсутствию питомников (kennel - питомники, notkennel - не питомники)"
+          schema:
+            type: string
+            enum:
+              - kennel
+              - notkennel
+      responses:
+        '200':
+          description: "Успешный ответ"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Pet"
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        pet_id:
+          type: integer
+        name:
+          type: string
+        breed:
+          type: string
+        photo:
+          type: string
+        owner_id:
+          type: array
+          items:
+            $ref: '#/components/schemas/Owner'
+        dogkennel_id:
+          type: integer
+          items:
+            $ref: '#/components/schemas/DogKennel'
+      oneOf:
+        - required:
+            - owners_id
+        - required:
+            - dogkennel_id
+
+    Owner:
+      type: object
+      properties:
+        owner_id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+        pets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pet'
+
+    DogKennel:
+      type: object
+      properties:
+        dog_kennel_id:
+          type: integer
+        name:
+          type: string
+        address:
+          type: string
+        pets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pet'
